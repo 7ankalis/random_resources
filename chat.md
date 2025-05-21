@@ -312,3 +312,216 @@ T max(T a, T b) {
 ---
 
 Made with ❤️ for your C++ exam prep.
+
+
+
+
+
+
+# STL Containers: Common Confusions and Access Methods
+
+## Sequence Containers
+
+### array
+**Common Confusions:**
+1. Not realizing size must be known at compile time
+2. Confusing with C-style arrays (STL array knows its size)
+3. Thinking bounds checking is automatic (only with `at()`)
+
+**Access Methods:**
+```cpp
+std::array<int, 5> arr = {1,2,3,4,5};
+
+// 1. Standard array access (no bounds checking)
+int x = arr[2];  
+
+// 2. Safe access with bounds checking
+int y = arr.at(3);  // throws std::out_of_range if invalid
+
+// 3. Front and back access
+int first = arr.front();  // 1
+int last = arr.back();    // 5
+
+// 4. Iterator access
+for(auto it = arr.begin(); it != arr.end(); ++it) {
+    std::cout << *it << " ";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+----
+Dynamic array that can grow/shrink at runtime
+
+Elements stored contiguously
+
+Fast random access
+
+Insertion/removal at end: O(1)
+
+Insertion/removal elsewhere: O(n)
+
+
+
+std::vector<int> vec = {1,2,3,4,5};
+
+// 1. Standard index access
+int x = vec[1];  // No bounds checking
+
+// 2. Safe access
+int y = vec.at(2);  // With bounds checking
+
+// 3. Front/back access
+int first = vec.front();
+int last = vec.back();
+
+// 4. Iterator access
+for(auto it = vec.begin(); it != vec.end(); ++it) {
+    std::cout << *it << " ";
+}
+
+// 5. Range-based for loop (C++11+)
+for(const auto& val : vec) {
+    std::cout << val << " ";
+}
+
+
+
+---
+Doubly linked list
+
+No random access, only sequential
+
+Fast insert/delete anywhere
+
+
+
+std::list<int> lst = {1,2,3,4,5};
+
+// Only sequential access possible
+int first = lst.front();
+int last = lst.back();
+
+// Iterator access required
+for(auto it = lst.begin(); it != lst.end(); ++it) {
+    std::cout << *it << " ";
+}
+
+// Special list operations
+lst.splice(lst.begin(), other_list);  // O(1)
+
+
+
+
+
+
+
+
+
+
+
+---
+Ordered, unique values
+
+Based on balanced BST (Red-Black Tree)
+std::set<int> s = {1,2,3,4,5};
+
+// Find elements (returns iterator)
+auto it = s.find(3);  // O(log n)
+if(it != s.end()) {
+    std::cout << *it;
+}
+
+// Count elements (1 for set, can be >1 for multiset)
+size_t count = s.count(2);  // O(log n)
+
+// Range-based access
+for(const auto& val : s) {
+    std::cout << val << " ";  // Sorted order
+}
+
+// Lower/upper bound
+auto lb = s.lower_bound(3);  // First not less than 3
+auto ub = s.upper_bound(4);  // First greater than 4
+
+---
+
+
+Key-value pairs
+
+Keys are unique and ordered
+
+
+
+
+std::map<std::string, int> m = {{"a",1}, {"b",2}};
+
+// 1. Key access (creates if doesn't exist)
+int x = m["a"];  // 1
+int y = m["c"];   // Creates {"c",0}
+
+// 2. Safe access
+auto it = m.find("b");  // Returns iterator
+if(it != m.end()) {
+    std::cout << it->second;
+}
+
+// 3. Insert access
+auto res = m.insert({"d", 4});  // Returns pair<iterator, bool>
+
+// 4. Range-based access
+for(const auto& [key, value] : m) {  // C++17 structured binding
+    std::cout << key << ": " << value;
+}
+
+
+
+
+
+
+
+
+
+
+std::stack<int> s;
+s.push(1);
+s.push(2);
+
+// Only top access
+int top = s.top();  // 2
+s.pop();            // Removes 2, returns void
+
+// No iterators available
+
+
+
+| Container         | Unique | Ordered | Structure       | Use Case                     |
+|------------------|--------|---------|------------------|------------------------------|
+| `vector`         | ✗      | ✓       | Dynamic Array    | Fast random access           |
+| `deque`          | ✗      | ✓       | Double-ended     | Insert/delete both ends      |
+| `list`           | ✗      | ✓       | Doubly Linked    | Frequent insert/delete       |
+| `stack`          | ✗      | ✗       | LIFO             | Function calls               |
+| `queue`          | ✗      | ✗       | FIFO             | BFS, scheduling              |
+| `priority_queue` | ✗      | ✗       | Heap             | Greedy, Dijkstra             |
+| `set`            | ✓      | ✓       | BST              | Unique sorted elements       |
+| `multiset`       | ✗      | ✓       | BST              | Duplicates allowed           |
+| `map`            | ✓      | ✓       | BST              | Key-value, sorted keys       |
+| `multimap`       | ✗      | ✓       | BST              | Multiple values per key      |
+| `unordered_set`  | ✓      | ✗       | Hash Table       | Fast lookup, no order        |
+| `unordered_map`  | ✓      | ✗       | Hash Table       | Fast key-value lookup        |
+
+
+
+
+
+
+
